@@ -1,0 +1,31 @@
+﻿<m:MetroWindow x:Class="Client.Wins.WinPZKImport"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client.Wins"
+        mc:Ignorable="d"
+        xmlns:t="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
+        Height="400" Width="500" Style="{StaticResource WinTool}" WindowStartupLocation="CenterScreen">
+    <DockPanel Margin="10">
+        <StackPanel Style="{StaticResource StpBottom}">
+            <Button Name="BtnImport" Content="导入" Click="BtnImport_Click" />
+            <Button Name="BtnOK" Content="确定" Click="BtnOK_Click" />
+            <Button Name="BtnCancel" Content="取消" Click="BtnCancel_Click" />
+        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <t:RadGridView Name="DgVIT" Style="{StaticResource DgSimple}" SelectionChanged="DgVIT_SelectionChanged">
+                <t:RadGridView.Columns>
+                    <t:GridViewDataColumn Header="模板名称" Width="*" DataMemberBinding="{Binding Path=Name}" />
+                </t:RadGridView.Columns>
+            </t:RadGridView>
+            <t:RadGridView Name="DgExcel" Style="{StaticResource DgSimple}" AutoGenerateColumns="True" Grid.Column="2"/>
+        </Grid>
+    </DockPanel>
+</m:MetroWindow>

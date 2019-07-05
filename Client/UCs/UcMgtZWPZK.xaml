@@ -1,0 +1,136 @@
+﻿<UserControl x:Class="Client.UCs.UcMgtZWPZK"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Client.UCs"
+             mc:Ignorable="d"
+             xmlns:t="http://schemas.telerik.com/2008/xaml/presentation"
+             xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:i="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             xmlns:CvFinance="clr-namespace:Client.DomainModels.Converters"
+             xmlns:FuncFinance="clr-namespace:Client.Funcs"
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <CvFinance:CvDebitAmount x:Key="CvDebitAmount" />
+        <CvFinance:CvCreditAmount x:Key="CvCreditAmount" />
+        <FuncFinance:FuncSumDebit x:Key="FuncSumDebit" />
+        <FuncFinance:FuncSumCredit x:Key="FuncSumCredit" />
+    </UserControl.Resources>
+
+    <DockPanel Margin="10">
+        <t:RadToolBar Style="{StaticResource TBarTop}">
+            <Button Name="BtnAdd" Content="{i:Modern Kind=PageAdd}" ToolTip="新建" Click="BtnAdd_Click"/>
+            <Button Name="BtnSave" Content="{i:Modern Kind=Save}" ToolTip="保存" Click="BtnSave_Click"/>
+            <Button Name="BtnImport" Content="{i:Modern Kind=OfficeExcel}" ToolTip="导入" Click="BtnImport_Click"/>
+        </t:RadToolBar>
+
+        <Grid Name="PanelPZK" DockPanel.Dock="Top">
+            <Grid.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="pack://application:,,,/Client;component/Md.xaml"/>
+                    </ResourceDictionary.MergedDictionaries>
+
+                    <Style TargetType="TextBox" BasedOn="{StaticResource TbxLine}">
+                        <Setter Property="IsReadOnly" Value="True"/>
+                    </Style>
+                </ResourceDictionary>
+            </Grid.Resources>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Label Content="凭证编号" Grid.Column="0" Grid.Row="0" />
+            <Label Content="凭证日期" Grid.Column="2" Grid.Row="0" />
+            <Label Content="凭证类型" Grid.Column="4" Grid.Row="0" />
+            <Label Content="制单人" Grid.Column="6" Grid.Row="0" />
+
+            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Path=ZWPZK_PZBH}" />
+            <TextBox Grid.Column="3" Grid.Row="0" Text="{Binding Path=ZWPZK_PZRQ}" />
+            <TextBox Grid.Column="5" Grid.Row="0" Text="{Binding Path=ZWPZLX.ZWPZLX_LXMC}" />
+            <TextBox Grid.Column="7" Grid.Row="0" IsReadOnly="False" Text="{Binding Path=ZWPZK_ZDR}" />
+        </Grid>
+
+        <Grid Margin="0,10,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="10"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <t:RadGridView Name="DgPZFL" Style="{StaticResource DgSimple}" IsReadOnly="False" ShowColumnFooters="True" SelectionChanged="DgPZFL_SelectionChanged">
+                <t:RadGridView.Columns>
+                    <t:GridViewDataColumn Header="摘要" Width="*" DataMemberBinding="{Binding Path=ZWPZFL_ZY}" />
+                    <t:GridViewDataColumn Header="科目编号" IsReadOnly="True" Width="*" DataMemberBinding="{Binding Path=ZWKMZD.ZWKMZD_KMBH}" />
+                    <t:GridViewDataColumn Header="科目名称" IsReadOnly="True" Width="*" DataMemberBinding="{Binding Path=ZWKMZD.ZWKMZD_KMMC}" />
+                    <t:GridViewDataColumn Header="借方金额" IsReadOnly="True" Width="*">
+                        <t:GridViewDataColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource CvDebitAmount}">
+                                            <Binding Path="ZWPZFL_JE" />
+                                            <Binding Path="ZWPZFL_JZFX" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </t:GridViewDataColumn.CellTemplate>
+                        <t:GridViewDataColumn.AggregateFunctions>
+                            <FuncFinance:FuncSumDebit Caption="合计：" />
+                        </t:GridViewDataColumn.AggregateFunctions>
+                    </t:GridViewDataColumn>
+                    <t:GridViewDataColumn Header="贷方金额" IsReadOnly="True" Width="*">
+                        <t:GridViewDataColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource CvCreditAmount}">
+                                            <Binding Path="ZWPZFL_JE" />
+                                            <Binding Path="ZWPZFL_JZFX" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </t:GridViewDataColumn.CellTemplate>
+                        <t:GridViewDataColumn.AggregateFunctions>
+                            <FuncFinance:FuncSumCredit Caption="合计：" />
+                        </t:GridViewDataColumn.AggregateFunctions>
+                    </t:GridViewDataColumn>
+                </t:RadGridView.Columns>
+            </t:RadGridView>
+
+            <t:RadGridView Name="DgFZYS" Style="{StaticResource DgSimple}" IsReadOnly="False" ShowColumnFooters="True" Grid.Row="2" CellEditEnded="DgFZYS_CellEditEnded">
+                <t:RadGridView.Columns>
+                    <t:GridViewDataColumn Header="部门编号" IsReadOnly="True" Width="*" DataMemberBinding="{Binding Path=LSBMZD.LSBMZD_BMBH}" />
+                    <t:GridViewDataColumn Header="部门名称" IsReadOnly="True" Width="*" DataMemberBinding="{Binding Path=LSBMZD.LSBMZD_BMMC}" />
+                    <t:GridViewDataColumn Header="项目编号" IsReadOnly="True" Width="*" DataMemberBinding="{Binding Path=XM01.ZWHSXM_XMBH}" />
+                    <t:GridViewDataColumn Header="项目名称" IsReadOnly="True" Width="*" DataMemberBinding="{Binding Path=XM01.ZWHSXM_XMMC}" />
+                    <t:GridViewDataColumn Header="数量" IsReadOnly="True" Width="*" DataMemberBinding="{Binding Path=ZWFZYS_SL}">
+                        <t:GridViewDataColumn.AggregateFunctions>
+                            <t:SumFunction SourceField="ZWFZYS_SL" ResultFormatString="合计：{0}" />
+                        </t:GridViewDataColumn.AggregateFunctions>
+                    </t:GridViewDataColumn>
+                    <t:GridViewDataColumn Header="单价" IsReadOnly="True" Width="*" DataMemberBinding="{Binding Path=ZWFZYS_DJ}">
+                        <t:GridViewDataColumn.AggregateFunctions>
+                            <t:AverageFunction SourceField="ZWFZYS_DJ" ResultFormatString="平均：{0}" />
+                        </t:GridViewDataColumn.AggregateFunctions>
+                    </t:GridViewDataColumn>
+                    <t:GridViewDataColumn Header="金额" Width="*" DataMemberBinding="{Binding Path=ZWFZYS_JE}">
+                        <t:GridViewDataColumn.AggregateFunctions>
+                            <t:SumFunction SourceField="ZWFZYS_JE" ResultFormatString="合计：{0}" />
+                        </t:GridViewDataColumn.AggregateFunctions>
+                    </t:GridViewDataColumn>
+                </t:RadGridView.Columns>
+            </t:RadGridView>
+        </Grid>
+    </DockPanel>
+</UserControl>

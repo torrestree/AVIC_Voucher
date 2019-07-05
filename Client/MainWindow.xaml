@@ -1,0 +1,48 @@
+﻿<m:MetroWindow x:Class="Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:t="http://schemas.telerik.com/2008/xaml/presentation"
+        xmlns:m="http://metro.mahapps.com/winfx/xaml/controls"
+        Name="WinMain" Style="{StaticResource WinMain}" Closing="WinMain_Closing">
+    <m:MetroWindow.RightWindowCommands>
+        <m:WindowCommands>
+            <Button Name="BtnCloseCurrent" Content="关闭当前" Click="BtnCloseCurrent_Click"/>
+            <Button Name="BtnCloseOthers" Content="关闭其他" Click="BtnCloseOthers_Click"/>
+            <Button Name="BtnCloseAll" Content="关闭所有" Click="BtnCloseAll_Click"/>
+        </m:WindowCommands>
+    </m:MetroWindow.RightWindowCommands>
+
+    <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="Images/Background.jpg" Stretch="UniformToFill" Opacity="0.1"/>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="100" Width="200"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Border BorderBrush="Silver" BorderThickness="1">
+            <DockPanel>
+                <GroupBox Header="业务信息" Padding="10" DockPanel.Dock="Bottom">
+                    <StackPanel>
+                        <Label Content="业务人员"/>
+                        <TextBox Name="TbxName" TextChanged="TbxName_TextChanged"/>
+                        <Label Content="业务日期"/>
+                        <t:RadDateTimePicker Name="DpLogin" SelectionChanged="DpLogin_SelectionChanged"/>
+                    </StackPanel>
+                </GroupBox>
+
+                <t:RadPanelBar VerticalAlignment="Top" ExpandMode="Multiple">
+                    <t:RadPanelBarItem Header="模板管理">
+                        <t:RadPanelBarItem Header="模板编辑" Click="ItemVITEdit_Click"/>
+                    </t:RadPanelBarItem>
+                    <t:RadPanelBarItem Header="凭证管理">
+                        <t:RadPanelBarItem Header="凭证导入" Click="ItemVoucherImport_Click"/>
+                    </t:RadPanelBarItem>
+                </t:RadPanelBar>
+            </DockPanel>
+        </Border>
+
+        <t:RadTabControl Name="TclMain" Grid.Column="1"/>
+    </Grid>
+</m:MetroWindow>
